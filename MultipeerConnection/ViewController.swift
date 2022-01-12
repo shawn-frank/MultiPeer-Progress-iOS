@@ -80,7 +80,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             return
         }
         
-        // Initialize and fire a timer to check the status of the file transfer every 0.1 second
+        // Initialize and fire a timer to check the status of the file transfer every
+        // 0.1 second
         checkProgressTimer = Timer.scheduledTimer(timeInterval: 0.1,
                                                   target: self,
                                                   selector: #selector(updateProgressStatus),
@@ -221,6 +222,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         
         // Debugging data
         print("Full URL: \(url.absoluteString)")
+        
+        numberLabel.text = "Transfer complete!"
         
         // Invalidate the timer
         checkProgressTimer?.invalidate()
