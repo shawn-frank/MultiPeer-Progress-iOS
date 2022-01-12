@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MultipeerConnection" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Oqf-fT-a8U">
+                                <rect key="frame" x="107" y="348" width="200" height="200"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ioe-CC-ZfN">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dCz-If-jIm">
+                                        <rect key="frame" x="0.0" y="43" width="200" height="27.5"/>
+                                        <state key="normal" title="Host"/>
+                                        <connections>
+                                            <action selector="hostButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DVS-HH-PEC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V6d-es-FsR">
+                                        <rect key="frame" x="0.0" y="86.5" width="200" height="27"/>
+                                        <state key="normal" title="Guest"/>
+                                        <connections>
+                                            <action selector="guestButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yga-st-r3Q"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKD-LV-Q86">
+                                        <rect key="frame" x="0.0" y="129.5" width="200" height="27.5"/>
+                                        <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sendButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AP7-OF-ORu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibe-m8-hGY">
+                                        <rect key="frame" x="0.0" y="173" width="200" height="27"/>
+                                        <state key="normal" title="Send image as resource"/>
+                                        <connections>
+                                            <action selector="sendImageAsResource:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LmS-rW-pcy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="5cd-q0-llb"/>
+                                    <constraint firstAttribute="height" constant="200" id="Xzs-UZ-M7t"/>
+                                </constraints>
+                            </stackView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8Qh-Mm-pgx">
+                                <rect key="frame" x="0.0" y="44" width="414" height="275"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Oqf-fT-a8U" firstAttribute="top" secondItem="8Qh-Mm-pgx" secondAttribute="bottom" constant="29" id="2q4-Bq-eZG"/>
+                            <constraint firstItem="Oqf-fT-a8U" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CBC-VS-b7f"/>
+                            <constraint firstAttribute="trailing" secondItem="8Qh-Mm-pgx" secondAttribute="trailing" id="fVY-Oo-RlC"/>
+                            <constraint firstItem="8Qh-Mm-pgx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="gLd-dH-Ka1"/>
+                            <constraint firstItem="8Qh-Mm-pgx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l8W-f4-9h4"/>
+                            <constraint firstItem="Oqf-fT-a8U" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wPM-YM-NYt"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="8Qh-Mm-pgx" id="Ba0-Z1-ASR"/>
+                        <outlet property="numberLabel" destination="Ioe-CC-ZfN" id="kiC-eW-eYa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="28.985507246376812" y="89.732142857142847"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
