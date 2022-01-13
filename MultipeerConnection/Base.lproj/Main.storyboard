@@ -18,37 +18,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Oqf-fT-a8U">
-                                <rect key="frame" x="107" y="348" width="200" height="200"/>
+                                <rect key="frame" x="30" y="348" width="354" height="200"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ioe-CC-ZfN">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="27"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="354" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dCz-If-jIm">
-                                        <rect key="frame" x="0.0" y="43" width="200" height="27.5"/>
+                                        <rect key="frame" x="0.0" y="43" width="354" height="27.5"/>
                                         <state key="normal" title="Host"/>
                                         <connections>
                                             <action selector="hostButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DVS-HH-PEC"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V6d-es-FsR">
-                                        <rect key="frame" x="0.0" y="86.5" width="200" height="27"/>
+                                        <rect key="frame" x="0.0" y="86.5" width="354" height="27"/>
                                         <state key="normal" title="Guest"/>
                                         <connections>
                                             <action selector="guestButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yga-st-r3Q"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKD-LV-Q86">
-                                        <rect key="frame" x="0.0" y="129.5" width="200" height="27.5"/>
+                                        <rect key="frame" x="0.0" y="129.5" width="354" height="27.5"/>
                                         <state key="normal" title="Send"/>
                                         <connections>
                                             <action selector="sendButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AP7-OF-ORu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibe-m8-hGY">
-                                        <rect key="frame" x="0.0" y="173" width="200" height="27"/>
+                                        <rect key="frame" x="0.0" y="173" width="354" height="27"/>
                                         <state key="normal" title="Send image as resource"/>
                                         <connections>
                                             <action selector="sendImageAsResource:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LmS-rW-pcy"/>
@@ -56,7 +56,6 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="5cd-q0-llb"/>
                                     <constraint firstAttribute="height" constant="200" id="Xzs-UZ-M7t"/>
                                 </constraints>
                             </stackView>
@@ -69,9 +68,11 @@
                         <constraints>
                             <constraint firstItem="Oqf-fT-a8U" firstAttribute="top" secondItem="8Qh-Mm-pgx" secondAttribute="bottom" constant="29" id="2q4-Bq-eZG"/>
                             <constraint firstItem="Oqf-fT-a8U" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CBC-VS-b7f"/>
+                            <constraint firstItem="Oqf-fT-a8U" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="GPm-58-Tjo"/>
                             <constraint firstAttribute="trailing" secondItem="8Qh-Mm-pgx" secondAttribute="trailing" id="fVY-Oo-RlC"/>
                             <constraint firstItem="8Qh-Mm-pgx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="gLd-dH-Ka1"/>
                             <constraint firstItem="8Qh-Mm-pgx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l8W-f4-9h4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Oqf-fT-a8U" secondAttribute="trailing" constant="10" id="pFD-hb-sZt"/>
                             <constraint firstItem="Oqf-fT-a8U" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wPM-YM-NYt"/>
                         </constraints>
                     </view>

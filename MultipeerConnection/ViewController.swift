@@ -20,6 +20,13 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     // Timer that will be used to check the file transfer progress
     var checkProgressTimer: Timer?
     
+    // Used by the host to track bytes to receive
+    var bytesExpectedToExchange = 0
+    
+    // Used to track the time taken in transfer, this is for testing purposes.
+    // You might get more reliable results using Date to track time
+    var transferTimeElapsed = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,11 +82,41 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         // 2. Get all the connected peers. For testing purposes I am only getting the
         // first peer, you might need to loop through all your connected peers and send
         // the files individually.
-        guard let imageURL = Bundle.main.url(forResource: "image", withExtension: "jpg"),
-              let clientPeerID = mcSession.connectedPeers.first else {
+        guard let imageURL = Bundle.main.url(forResource: "image2", withExtension: "jpg"),
+              let guestPeerID = mcSession.connectedPeers.first else {
             return
         }
         
+        // Retrieve the file size of the image
+        if let fileSizeToTransfer = getFileSize(atURL: imageURL)
+        {
+            bytesExpectedToExchange = fileSizeToTransfer
+            
+            // Put the file size in a dictionary
+            let fileTransferMeta = ["fileSize": bytesExpectedToExchange]
+            
+            // Convert the dictionary to a data object in order to send it via MultiPeer
+            let encoder = JSONEncoder()
+            
+            if let JSONData = try? encoder.encode(fileTransferMeta)
+            {
+                // Send the file size to the guest users
+                try? mcSession.send(JSONData, toPeers: mcSession.connectedPeers, with: .reliable)
+            }
+        }
+        
+        // Ideally for best reliability, you will want to develop some logic for the guest to
+        // respond that it has received the file size and then you should initiate the transfer
+        // to that peer only after you receive this confirmation. For now, I just add a delay
+        // so that I am highly certain the guest has received this data for testing purposes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1)
+        { [weak self] in
+            self?.initiateFileTransfer(ofImage: imageURL, to: guestPeerID)
+        }
+    }
+    
+    func initiateFileTransfer(ofImage imageURL: URL, to guestPeerID: MCPeerID)
+    {
         // Initialize and fire a timer to check the status of the file transfer every
         // 0.1 second
         checkProgressTimer = Timer.scheduledTimer(timeInterval: 0.1,
@@ -92,8 +129,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         // keeping hold of the returned progress object which we need to keep checking
         // using the timer
         fileTransferProgress = mcSession.sendResource(at: imageURL,
-                                          withName: "image.jpg",
-                                          toPeer: clientPeerID,
+                                          withName: "image2.jpg",
+                                          toPeer: guestPeerID,
                                           withCompletionHandler: { (error) in
                                             
                                             // Handle errors
@@ -106,26 +143,56 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
                                           })
     }
     
+    func getFileSize(atURL url: URL) -> Int?
+    {
+        let urlResourceValue = try? url.resourceValues(forKeys: [.fileSizeKey])
+        
+        return urlResourceValue?.fileSize
+    }
+    
     /// Function fired by the local checkProgressTimer object used to track the progress of the file transfer
     @objc
     func updateProgressStatus()
     {
+        // Update the time elapsed. As mentioned earlier, a more reliable approach
+        // might be to compare the time of a Date object from when the transfer started
+        // to the time of a current Date object
+        transferTimeElapsed += 0.1
+        
         // Verify the progress variable is valid
         if let progress = fileTransferProgress
         {
             // Convert the progress into a percentage
             let percentCompleted = 100 * progress.fractionCompleted
             
-            // Update the progress on the UI
-            numberLabel.text = "\(percentCompleted.rounded())%"
+            // Calculate the data exchanged sent in MegaBytes
+            let dataExchangedInMB = (Double(bytesExpectedToExchange) * progress.fractionCompleted) / 1000000
+            
+            // We have exchanged 'dataExchangedInMB' MB of data in 'transferTimeElapsed' seconds
+            // So we have to calculate how much data will be exchanged in 60 seconds using cross multiplication
+            // For example:
+            // 2 MB in 0.5s
+            //  ?   in  1s
+            // MB/s = (1 x 2) / 0.5 = 4 MB/s
+            let megabytesPerSecond = (1 * dataExchangedInMB) / transferTimeElapsed
+            
+            // Convert dataExchangedInMB into a string rounded to 2 decimal places
+            let dataExchangedInMBString = String(format: "%.2f", dataExchangedInMB)
+            
+            // Convert megabytesPerSecond into a string rounded to 2 decimal places
+            let megabytesPerSecondString = String(format: "%.2f", megabytesPerSecond)
+            
+            // Update the progress an data exchanged on the UI
+            numberLabel.text = "\(percentCompleted.rounded())% - \(dataExchangedInMBString) MB @ \(megabytesPerSecondString) MB/s"
             
             // This is mostly useful on the browser side to check if the file transfer
-            // is complete so that we can safely deinit the timer and update the UI
+            // is complete so that we can safely deinit the timer, reset vars and update the UI
             if percentCompleted >= 100
             {
-                numberLabel.text = "Transfer complete"
+                numberLabel.text = "Transfer complete!"
                 checkProgressTimer?.invalidate()
                 checkProgressTimer = nil
+                transferTimeElapsed = 0.0
             }
         }
     }
@@ -163,7 +230,18 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        //data received
+        
+        // Check if the guest has received file transfer data
+        if let fileTransferMeta = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Int],
+           let fileSizeToReceive = fileTransferMeta["fileSize"]
+        {
+            // Store the bytes to be received in a variable
+            bytesExpectedToExchange = fileSizeToReceive
+            print("Bytes expected to receive: \(fileSizeToReceive)")
+            return
+        }
+        
+        
         if let text = String(data: data, encoding: .utf8) {
             DispatchQueue.main.async {
                 //display the text in the label
@@ -228,6 +306,9 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         // Invalidate the timer
         checkProgressTimer?.invalidate()
         checkProgressTimer = nil
+        
+        // Reset the transfer timer
+        transferTimeElapsed = 0.0
         
         // Set the UIImageView with the downloaded image
         imageView.image = UIImage(contentsOfFile: url.path)
