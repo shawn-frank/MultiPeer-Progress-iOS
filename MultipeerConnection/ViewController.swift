@@ -75,14 +75,17 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
-    func sendImageAsResource() {
-        // 1. Get the url of the image in the project bundle. Change this if your image
-        // is hosted in your documents directory or elsewhere.
+    func sendImageAsResource()
+    {
+        // 1. Get the url of the image in the project bundle.
+        // Change this if your image is hosted in your documents directory
+        // or elsewhere.
         //
-        // 2. Get all the connected peers. For testing purposes I am only getting the
-        // first peer, you might need to loop through all your connected peers and send
-        // the files individually.
-        guard let imageURL = Bundle.main.url(forResource: "image2", withExtension: "jpg"),
+        // 2. Get all the connected peers. For testing purposes I am only
+        // getting the first peer, you might need to loop through all your
+        // connected peers and send the files individually.
+        guard let imageURL = Bundle.main.url(forResource: "image2",
+                                             withExtension: "jpg"),
               let guestPeerID = mcSession.connectedPeers.first else {
             return
         }
@@ -95,20 +98,23 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             // Put the file size in a dictionary
             let fileTransferMeta = ["fileSize": bytesExpectedToExchange]
             
-            // Convert the dictionary to a data object in order to send it via MultiPeer
+            // Convert the dictionary to a data object in order to send it via
+            // MultiPeer
             let encoder = JSONEncoder()
             
             if let JSONData = try? encoder.encode(fileTransferMeta)
             {
                 // Send the file size to the guest users
-                try? mcSession.send(JSONData, toPeers: mcSession.connectedPeers, with: .reliable)
+                try? mcSession.send(JSONData, toPeers: mcSession.connectedPeers,
+                                    with: .reliable)
             }
         }
         
-        // Ideally for best reliability, you will want to develop some logic for the guest to
-        // respond that it has received the file size and then you should initiate the transfer
-        // to that peer only after you receive this confirmation. For now, I just add a delay
-        // so that I am highly certain the guest has received this data for testing purposes
+        // Ideally for best reliability, you will want to develop some logic
+        // for the guest to respond that it has received the file size and then
+        // you should initiate the transfer to that peer only after you receive
+        // this confirmation. For now, I just add a delay so that I am highly
+        // certain the guest has received this data for testing purposes
         DispatchQueue.main.asyncAfter(deadline: .now() + 1)
         { [weak self] in
             self?.initiateFileTransfer(ofImage: imageURL, to: guestPeerID)
@@ -117,8 +123,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     func initiateFileTransfer(ofImage imageURL: URL, to guestPeerID: MCPeerID)
     {
-        // Initialize and fire a timer to check the status of the file transfer every
-        // 0.1 second
+        // Initialize and fire a timer to check the status of the file
+        // transfer every 0.1 second
         checkProgressTimer = Timer.scheduledTimer(timeInterval: 0.1,
                                                   target: self,
                                                   selector: #selector(updateProgressStatus),
@@ -145,6 +151,7 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     
     func getFileSize(atURL url: URL) -> Int?
     {
+        // Retrieve the file meta data of the resource at the current URL if available
         let urlResourceValue = try? url.resourceValues(forKeys: [.fileSizeKey])
         
         return urlResourceValue?.fileSize
@@ -155,8 +162,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
     func updateProgressStatus()
     {
         // Update the time elapsed. As mentioned earlier, a more reliable approach
-        // might be to compare the time of a Date object from when the transfer started
-        // to the time of a current Date object
+        // might be to compare the time of a Date object from when the
+        // transfer started to the time of a current Date object
         transferTimeElapsed += 0.1
         
         // Verify the progress variable is valid
@@ -166,10 +173,12 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
             let percentCompleted = 100 * progress.fractionCompleted
             
             // Calculate the data exchanged sent in MegaBytes
-            let dataExchangedInMB = (Double(bytesExpectedToExchange) * progress.fractionCompleted) / 1000000
+            let dataExchangedInMB = (Double(bytesExpectedToExchange)
+                                     * progress.fractionCompleted) / 1000000
             
-            // We have exchanged 'dataExchangedInMB' MB of data in 'transferTimeElapsed' seconds
-            // So we have to calculate how much data will be exchanged in 60 seconds using cross multiplication
+            // We have exchanged 'dataExchangedInMB' MB of data in 'transferTimeElapsed'
+            // seconds. So we have to calculate how much data will be exchanged in 1 second
+            // using cross multiplication
             // For example:
             // 2 MB in 0.5s
             //  ?   in  1s
@@ -229,8 +238,8 @@ class ViewController: UIViewController, MCSessionDelegate, MCBrowserViewControll
         }
     }
     
-    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)
+    {
         // Check if the guest has received file transfer data
         if let fileTransferMeta = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Int],
            let fileSizeToReceive = fileTransferMeta["fileSize"]
